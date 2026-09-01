@@ -104,15 +104,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: fmail-linux
           path: release
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: fmail-flatpak
           path: release
       - name: GitHub-Release veröffentlichen
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: gh release create "$GITHUB_REF_NAME" release/fmail release/fmail.flatpak --generate-notes --title "f:mail $GITHUB_REF_NAME"
