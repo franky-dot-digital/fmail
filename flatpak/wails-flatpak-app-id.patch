@@ -1,0 +1,15 @@
+diff --git a/pkg/application/application_linux.go b/pkg/application/application_linux.go
+--- a/pkg/application/application_linux.go
++++ b/pkg/application/application_linux.go
+@@ -209,7 +209,10 @@ func (a *linuxApp) unregisterWindow(window windowPointer) {
+ }
+ 
+ func newPlatformApp(parent *App) *linuxApp {
+-	name := sanitizeAppName(parent.options.Name)
++	name := os.Getenv("FLATPAK_ID")
++	if name == "" {
++		name = sanitizeAppName(parent.options.Name)
++	}
+ 	app := &linuxApp{
+ 		parent:      parent,
+ 		application: appNew(name),

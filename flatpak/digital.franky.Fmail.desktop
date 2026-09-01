@@ -6,4 +6,4 @@ Exec=fmail
 Icon=digital.franky.Fmail
 Categories=Network;Email;
 Terminal=false
-StartupWMClass=fmail
+StartupWMClass=digital.franky.Fmail

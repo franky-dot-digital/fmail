@@ -62,6 +62,10 @@ flatpak install --user ./fmail.flatpak
 flatpak run digital.franky.Fmail
 ```
 
+Hinweis: Für die derzeitige WebKitGTK-/Flatpak-Kombination deaktiviert das
+Bundle die zusätzliche WebKit-Prozess-Sandbox. Die übergeordnete Flatpak-
+Sandbox und ihre Netzwerk-/Dateibeschränkungen bleiben aktiv.
+
 Jeder Commit auf `main` erzeugt ein kurzlebiges CI-Artefakt. Ein Tag wie
 `v0.1.0` veröffentlicht das Linux-Binary und `fmail.flatpak` dauerhaft unter
 [GitHub Releases](https://github.com/franky-dot-digital/fmail/releases).

@@ -8,6 +8,11 @@ command: fmail
 
 finish-args:
   - --share=network
+  - --share=ipc
+  # WebKitGTK auf Flatpak 1.16.0 kann den Web-Prozess sonst nicht starten
+  # (Portal-Fehler: "failed to receive credentials"). Die äußere Flatpak-
+  # Sandbox bleibt aktiv; nur die zusätzliche WebKit-Sandbox ist deaktiviert.
+  - --env=WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS=1
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
@@ -28,10 +33,17 @@ modules:
         tar -C .goroot -xzf go.tar.gz --strip-components=1
         rm go.tar.gz
       - |
+        set -e
         export PATH=$PWD/.goroot/bin:$PATH
         export GOCACHE=/tmp/go-build-cache
         cd fmail
         go mod verify
+        go mod download github.com/wailsapp/wails/v3
+        WAILS_DIR="$(go env GOMODCACHE)/github.com/wailsapp/wails/v3@v3.0.0-beta.9"
+        cp -a "${WAILS_DIR}" .wails-flatpak
+        chmod -R u+w .wails-flatpak
+        patch -d .wails-flatpak -p1 < ../flatpak/wails-flatpak-app-id.patch
+        go mod edit -replace github.com/wailsapp/wails/v3=./.wails-flatpak
         mkdir -p bin
         go build -tags production -trimpath -buildvcs=false -ldflags="-w -s" -o bin/fmail .
       - install -Dm755 fmail/bin/fmail "${FLATPAK_DEST}/bin/fmail"
