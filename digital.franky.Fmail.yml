@@ -1,0 +1,48 @@
+# GitHub-Release-Manifest für f:mail. Es ist bewusst nicht für eine
+# Einreichung bei Flathub vorbereitet: Go-Module werden beim Bau geladen.
+id: digital.franky.Fmail
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+command: fmail
+
+finish-args:
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --talk-name=org.freedesktop.secrets
+  - --filesystem=xdg-config/fmail:create
+
+modules:
+  - name: fmail
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - |
+        curl -fsSL "https://go.dev/dl/go1.25.11.linux-amd64.tar.gz" -o /tmp/go.tar.gz
+        echo "34f14304e856893f4ba30c2cacfe93906e9de7915c5f6aaaf3a81cdccd7ba30b  /tmp/go.tar.gz" | sha256sum -c -
+        mkdir -p /tmp/goroot
+        tar -C /tmp/goroot -xzf /tmp/go.tar.gz --strip-components=1
+      - |
+        export PATH=/tmp/goroot/bin:$PATH
+        export GOCACHE=/tmp/go-build-cache
+        cd fmail
+        go mod verify
+        mkdir -p bin
+        go build -tags production -trimpath -buildvcs=false -ldflags="-w -s" -o bin/fmail .
+      - install -Dm755 fmail/bin/fmail "${FLATPAK_DEST}/bin/fmail"
+      - install -Dm644 flatpak/digital.franky.Fmail.desktop "${FLATPAK_DEST}/share/applications/digital.franky.Fmail.desktop"
+      - install -Dm644 flatpak/digital.franky.Fmail.metainfo.xml "${FLATPAK_DEST}/share/metainfo/digital.franky.Fmail.metainfo.xml"
+      - install -Dm644 flatpak/icon.svg "${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/digital.franky.Fmail.svg"
+      - install -Dm644 LICENSE "${FLATPAK_DEST}/share/licenses/digital.franky.Fmail/LICENSE"
+    sources:
+      - type: dir
+        path: .
+        skip:
+          - .git
+          - .github
+          - fmail/bin
+          - fmail/frontend/node_modules

@@ -52,6 +52,20 @@ Auf Distributionen mit WebKitGTK 6 kann `-tags gtk3` entfallen. Die GitHub
 Action baut denselben eingecheckten Quellstand und verwendet die Lockfiles;
 es wird kein separates Projektgerüst mehr dynamisch erzeugt.
 
+## Flatpak installieren
+
+Das Flatpak wird ausschließlich über GitHub veröffentlicht, nicht über
+Flathub. Ein Release-Bundle lässt sich so installieren:
+
+```bash
+flatpak install --user ./fmail.flatpak
+flatpak run digital.franky.Fmail
+```
+
+Jeder Commit auf `main` erzeugt ein kurzlebiges CI-Artefakt. Ein Tag wie
+`v0.1.0` veröffentlicht das Linux-Binary und `fmail.flatpak` dauerhaft unter
+[GitHub Releases](https://github.com/franky-dot-digital/fmail/releases).
+
 ## Docker-Demo
 
 ```bash
@@ -78,7 +92,8 @@ fmail/                    kanonischer, baubarer Quellcode
   internal/mail/          IMAP, SMTP, MIME und HTML-Sanitisierung
   internal/store/         SQLite-Schema und Migrationen
   frontend/               Vanilla HTML/CSS/JavaScript
-flatpak/                  Flatpak-Manifest und Metadaten
+digital.franky.Fmail.yml  Flatpak-Buildmanifest
+flatpak/                  Desktop-Datei, AppStream-Metadaten und Icon
 docs/screenshots/         reproduzierbare Screenshots mit Demodaten
 .github/workflows/        Tests, Audit und Linux-/Flatpak-Build
 ```
