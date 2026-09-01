@@ -1,0 +1,20 @@
+# Variante B: noVNC im Browser. Funktioniert auf jedem Host-OS (macOS,
+# Windows, Linux) mit Docker Desktop -- kein X-Server auf dem Host nötig.
+# Etwas mehr Rendering-Overhead als Variante A, dafür garantiert portabel.
+#
+# Start:
+#   docker compose -f docker-compose.novnc.yml up --build
+#
+# Dann im Browser öffnen:
+#   http://localhost:6080/vnc.html
+
+services:
+  fmail:
+    build: .
+    ports:
+      - "127.0.0.1:6080:6080"
+    volumes:
+      - fmail-data:/root/.config/fmail
+
+volumes:
+  fmail-data:

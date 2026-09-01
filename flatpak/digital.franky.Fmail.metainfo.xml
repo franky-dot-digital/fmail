@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>digital.franky.Fmail</id>
+  <name>f:mail</name>
+  <summary>Ein aufgeräumter, lokaler Mailclient</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>
+      f:mail ist ein minimalistischer, lokaler Mailclient mit Post, Ablage,
+      Gesendet und Pförtner (Freigabe neuer Absender per Daumen hoch/runter).
+      Zugangsdaten
+      landen ausschließlich im Schlüsselbund des Systems, nicht in der
+      lokalen Datenbank.
+    </p>
+  </description>
+  <launchable type="desktop-id">digital.franky.Fmail.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-08-06">
+      <description>
+        <p>Erster Stand: IMAP/SMTP, SQLite, mehrere Konten, Gesendet und Pförtner.</p>
+      </description>
+    </release>
+  </releases>
+  <url type="homepage">https://franky.digital</url>
+</component>

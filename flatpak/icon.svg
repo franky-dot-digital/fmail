@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="#35506B"/>
+  <text x="64" y="67" text-anchor="middle" dominant-baseline="central"
+        font-family="'IBM Plex Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif"
+        font-size="52" font-weight="700" letter-spacing="-1" fill="#F7F6F3">f:m</text>
+</svg>

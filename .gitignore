@@ -1,0 +1,28 @@
+# Persönliche Laufzeitdaten und Zugangsdaten
+*.db
+*.db-shm
+*.db-wal
+*.sqlite*
+.env
+.env.*
+!.env.example
+
+# Build- und Paketartefakte
+fmail/bin/
+fmail/frontend/dist/
+fmail/frontend/node_modules/
+*.flatpak
+*.AppImage
+
+# Lokale Werkzeuge
+.idea/
+.vscode/
+.claude/
+.DS_Store
+
+# Historische Arbeitskopien; veröffentlicht wird ausschließlich fmail/.
+app-src/
+/main.go
+/mailservice.go
+/accountservice.go
+/internal/

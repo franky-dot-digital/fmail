@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=My Product
+Comment=A fmail application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/fmail %u
+Terminal=false
+Type=Application
+Icon=fmail
+Categories=Utility;
+StartupWMClass=fmail
+
+ 

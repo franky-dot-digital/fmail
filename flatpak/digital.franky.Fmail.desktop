@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=f:mail
+Comment=Ein aufgeräumter, lokaler Mailclient
+Exec=fmail
+Icon=digital.franky.Fmail
+Categories=Network;Email;
+Terminal=false
+StartupWMClass=fmail

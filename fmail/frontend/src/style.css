@@ -1,0 +1,1135 @@
+/* ---------- Design Tokens ---------- */
+:root {
+    --paper:        #F7F6F3;
+    --paper-raised: #FFFFFF;
+    --ink:          #1C1E21;
+    --ink-soft:     #4A4E56;
+    --slate:        #6B7078;
+    --hairline:     #E4E1DA;
+
+    --steel:        #35506B;
+    --steel-soft:   #E9EEF2;
+    --moss:         #4B7A5A;
+    --moss-soft:    #E7F0E9;
+    --rust:         #A8442E;
+    --rust-soft:    #F5E7E3;
+    --amber:        #C98A2E;
+
+    --avatar-steel: #35506B;
+    --avatar-moss:  #4B7A5A;
+    --avatar-amber: #C98A2E;
+    --avatar-rust:  #A8442E;
+    --avatar-slate: #6B7078;
+
+    --font-ui:   "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-full: 999px;
+
+    /* color-scheme steuert nativ gerendertes UI-Chrome, das eigene CSS
+       nicht erreicht — allen voran die Popup-Liste von <select>. Ohne
+       das bleibt sie im Dark Mode oft hell (System-/Engine-Default),
+       während Text und Rahmen schon auf Dunkel stehen: weißer Text auf
+       weißem Grund, praktisch unlesbar. */
+    color-scheme: light;
+}
+
+/* Dunkles Farbschema: gilt, wenn explizit "Dunkel" gewählt ist (data-theme),
+   oder wenn "System" gewählt ist (kein data-theme) und das OS Dark Mode
+   verwendet. Dieselben Farbfamilien wie hell (Steel/Moss/Rust/Amber), nur
+   für Kontrast auf dunklem Grund aufgehellt. */
+:root[data-theme="dark"] {
+    --paper:        #1B1D20;
+    --paper-raised: #24262A;
+    --ink:          #F1EFEA;
+    --ink-soft:     #C7C9CE;
+    --slate:        #8B9098;
+    --hairline:     #35373C;
+
+    --steel:        #7FA3C4;
+    --steel-soft:   #26333F;
+    --moss:         #8CBC98;
+    --moss-soft:    #223028;
+    --rust:         #E08A6E;
+    --rust-soft:    #3A241E;
+    --amber:        #E3B15C;
+
+    --avatar-steel: #4E7599;
+    --avatar-moss:  #5C9268;
+    --avatar-amber: #C98A2E;
+    --avatar-rust:  #B2503A;
+    --avatar-slate: #6B7078;
+
+    color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --paper:        #1B1D20;
+        --paper-raised: #24262A;
+        --ink:          #F1EFEA;
+        --ink-soft:     #C7C9CE;
+        --slate:        #8B9098;
+        --hairline:     #35373C;
+
+        --steel:        #7FA3C4;
+        --steel-soft:   #26333F;
+        --moss:         #8CBC98;
+        --moss-soft:    #223028;
+        --rust:         #E08A6E;
+        --rust-soft:    #3A241E;
+        --amber:        #E3B15C;
+
+        --avatar-steel: #4E7599;
+        --avatar-moss:  #5C9268;
+        --avatar-amber: #C98A2E;
+        --avatar-rust:  #B2503A;
+        --avatar-slate: #6B7078;
+
+        color-scheme: dark;
+    }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-ui);
+    background: var(--paper);
+    color: var(--ink);
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app { display: flex; flex-direction: column; height: 100vh; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--paper-raised);
+    flex-shrink: 0;
+    -webkit-app-region: drag;
+}
+
+.wordmark {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+}
+
+.tabs { display: flex; gap: 4px; -webkit-app-region: no-drag; }
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate);
+    background: transparent;
+    border: none;
+    padding: 8px 14px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tab:hover { background: var(--hairline); color: var(--ink); }
+
+.tab.is-active {
+    /* --avatar-steel statt --steel: --steel wird im Dark Mode aufgehellt,
+       um als Text-/Rahmenfarbe auf dunklem Grund lesbar zu bleiben — als
+       Flächenfarbe mit weißer Schrift wäre der Kontrast dann zu schwach.
+       --avatar-steel bleibt in beiden Themes kräftig genug für #fff. */
+    background: var(--avatar-steel);
+    color: #fff;
+}
+
+.tab-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.tab-count:empty { display: none; }
+
+.tab-count.is-pending {
+    background: var(--avatar-rust); /* siehe Kommentar bei .tab.is-active */
+    color: #fff;
+    border-radius: var(--radius-full);
+    padding: 1px 6px;
+}
+
+.tab.is-active .tab-count.is-pending { background: rgba(255,255,255,0.28); }
+
+.topbar-search {
+    margin-left: auto;
+    -webkit-app-region: no-drag;
+}
+
+.search-input {
+    width: 220px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-full);
+    padding: 7px 14px;
+}
+.search-input::placeholder { color: var(--slate); }
+.search-input:focus { outline: none; border-color: var(--steel); }
+
+/* ---------- Content shell ---------- */
+.content { flex: 1; overflow-y: auto; }
+
+.view { max-width: 760px; margin: 0 auto; padding: 36px 24px 64px; }
+
+.view-header { text-align: center; margin-bottom: 28px; }
+
+.view-title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.view-sub {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.5;
+}
+
+.section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin: 8px 0 6px;
+}
+
+.section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
+}
+
+/* ---------- Mail list rows ---------- */
+.mail-list { display: flex; flex-direction: column; }
+
+.mail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--hairline);
+    cursor: pointer;
+    border-radius: var(--radius-s);
+    transition: background 0.12s ease;
+}
+
+.mail-row:hover { background: var(--steel-soft); }
+
+.mail-row:last-child { border-bottom: none; }
+
+.avatar {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.avatar.steel { background: var(--avatar-steel); }
+.avatar.moss  { background: var(--avatar-moss); }
+.avatar.amber { background: var(--avatar-amber); }
+.avatar.rust  { background: var(--avatar-rust); }
+.avatar.slate { background: var(--avatar-slate); }
+
+/* Markenlogos sind nur auf hellem/weißem Grund korrekt lesbar — anders
+   als die Initialen-Avatare bewusst themeunabhängig fest weiß, mit
+   Haarlinie zur Abgrenzung (v. a. im Dark Mode wichtig, sonst wirkt der
+   weiße Kreis wie ein Loch). */
+.avatar.avatar-brand {
+    background: #fff;
+    border: 1px solid var(--hairline);
+}
+.avatar.avatar-brand svg { width: 60%; height: 60%; }
+
+.mail-body { flex: 1; min-width: 0; }
+
+.mail-top-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.mail-subject {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+}
+
+.mail-row.is-unread .mail-subject,
+.mail-row.is-unread .mail-preview .sender {
+    font-weight: 700;
+}
+
+.unread-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex-shrink: 0;
+}
+
+.mail-preview {
+    margin-top: 3px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mail-preview .sender {
+    font-weight: 400;
+    color: var(--ink);
+}
+
+.mail-meta {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    padding-left: 8px;
+}
+
+.mail-date {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--slate);
+}
+
+.clip { color: var(--slate); font-size: 13px; }
+
+/* ---------- Empty state ---------- */
+.empty {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--slate);
+}
+
+.empty-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.empty-sub { font-size: 13.5px; }
+
+/* ---------- Pförtner (Screener) ---------- */
+.gate-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.gate-card.is-deciding { pointer-events: none; }
+
+.gate-card.leaving {
+    opacity: 0;
+    transform: scale(0.97) translateY(2px);
+}
+
+.gate-stamps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.stamp-btn {
+    width: 64px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: var(--radius-s);
+    padding: 9px 0 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: 1.5px solid transparent;
+    background: transparent;
+    transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.stamp-btn:active { transform: scale(0.94) rotate(-2deg); }
+
+.stamp-btn.approve {
+    color: var(--moss);
+    border-color: var(--moss);
+}
+.stamp-btn.approve:hover { background: var(--moss-soft); }
+
+.stamp-btn.block {
+    color: var(--rust);
+    border-color: var(--rust);
+}
+.stamp-btn.block:hover { background: var(--rust-soft); }
+
+.stamp-btn svg { width: 18px; height: 18px; }
+
+.gate-body { flex: 1; min-width: 0; }
+
+.gate-sender-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.gate-name { font-size: 15px; font-weight: 700; }
+
+.gate-email {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--slate);
+}
+
+.gate-subject { margin-top: 6px; font-size: 14px; font-weight: 600; }
+
+.gate-preview {
+    margin-top: 3px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+}
+
+.gate-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    /* Bewusst fest statt var(--ink): --ink ist im Dark Mode hell (dient
+       dort als Textfarbe), als Flächenfarbe mit weißer Schrift wäre der
+       Toast dann weiß auf weiß. Ein Toast darf in beiden Themes gleich
+       aussehen — dunkle Pille, weiße Schrift, wie ein Snackbar. */
+    background: #1C1E21;
+    color: #fff;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: var(--radius-full);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.gate-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.view-header-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.header-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel);
+    background: transparent;
+    border: 1px solid var(--steel);
+    border-radius: var(--radius-s);
+    padding: 7px 12px;
+    cursor: pointer;
+}
+.header-action-btn:hover { background: var(--steel-soft); }
+.header-action-btn svg { width: 14px; height: 14px; }
+
+/* .sync-btn teilt sich das Kästchen-Aussehen (Größe, Rahmen, Radius) mit
+   .header-action-btn ("Neu", "Gelesene anzeigen"), nutzt aber Moos statt
+   Steel als Farbe — auf einen Blick als eigene Kategorie erkennbar,
+   ohne aus der Reihe zu tanzen. */
+.sync-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--moss);
+    background: transparent;
+    border: 1px solid var(--moss);
+    border-radius: var(--radius-s);
+    padding: 7px 12px;
+    cursor: pointer;
+}
+.sync-btn:hover { background: var(--moss-soft); }
+.sync-btn:disabled { opacity: 0.6; cursor: default; }
+.sync-btn svg { width: 14px; height: 14px; }
+
+/* ---------- Konto-Formular ---------- */
+
+.konto-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.konto-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+}
+
+.konto-form input,
+.konto-form select {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+    padding: 8px 10px;
+}
+
+/* Zusätzlich zu color-scheme (siehe :root) explizit gesetzt, weil nicht
+   jede Engine die Popup-Liste eines <select> über color-scheme allein
+   einfärbt — <option> direkt zu stylen greift dort zusätzlich. */
+.konto-form option {
+    background: var(--paper-raised);
+    color: var(--ink);
+}
+
+.konto-row {
+    display: flex;
+    gap: 10px;
+}
+.konto-row label { flex: 1; }
+.konto-row label.narrow { flex: 0 0 110px; }
+
+.konto-section-label {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slate);
+}
+
+.secondary-btn {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel);
+    background: transparent;
+    border: 1px solid var(--steel);
+    border-radius: var(--radius-s);
+    padding: 7px 12px;
+    cursor: pointer;
+}
+.secondary-btn:hover { background: var(--steel-soft); }
+
+.konto-actions {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.konto-status {
+    font-size: 12.5px;
+    color: var(--slate);
+}
+
+.primary-btn {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--avatar-steel); /* siehe Kommentar bei .tab.is-active */
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.primary-btn:hover { filter: brightness(1.08); }
+
+/* ---------- Mail-Detailansicht ---------- */
+.view-detail { max-width: 680px; }
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
+    background: transparent;
+    border: none;
+    padding: 6px 4px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+.back-btn:hover { color: var(--ink); }
+.back-btn svg { width: 16px; height: 16px; }
+
+.detail-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 24px;
+}
+
+.detail-header-text { flex: 1; min-width: 0; }
+
+.detail-subject {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+.detail-sender-line {
+    margin-top: 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.detail-sender { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+.detail-email {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--slate);
+}
+
+.detail-date {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--slate);
+    padding-top: 2px;
+}
+
+.detail-html-toolbar:empty { display: none; }
+.detail-html-toolbar { margin-bottom: 12px; }
+
+.detail-html-surface,
+.detail-body {
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    padding: 20px 22px;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+}
+
+.detail-html-surface { overflow: hidden; }
+
+.detail-html-frame {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    /* Höhe wird nach dem Laden per JS an den Inhalt angepasst
+       (wireHTMLFrame) -- Startwert nur, damit während des Ladens nichts
+       zusammenklappt. */
+    height: 80px;
+}
+
+.attachment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.attachment-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+    padding: 10px 12px;
+}
+.attachment-row svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--slate); }
+
+.attachment-row-info { flex: 1; min-width: 0; }
+
+.attachment-row-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attachment-row-size {
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate);
+}
+
+.detail-body {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.detail-actions {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.detail-actions .secondary-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.detail-actions .secondary-btn svg { width: 14px; height: 14px; }
+
+.danger-btn {
+    color: var(--rust) !important;
+    border-color: var(--rust) !important;
+}
+.danger-btn:hover { background: var(--rust-soft) !important; }
+
+/* ---------- Konto-Badge (Absender-/Betreffzeile bei mehreren Konten) ---------- */
+.account-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--slate);
+    background: var(--hairline);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+    flex-shrink: 0;
+}
+
+.mail-top-line .account-badge { margin-left: auto; }
+.gate-sender-line .account-badge { margin-left: auto; }
+
+/* ---------- Einstellungen: Kontenliste ---------- */
+.account-row {
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.account-row-info { flex: 1; min-width: 0; }
+
+.account-row-label { font-size: 14.5px; font-weight: 700; }
+
+.account-row-meta {
+    margin-top: 3px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--slate);
+}
+
+.account-row-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.konto-actions-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* ---------- Compose (Antworten/Weiterleiten/Neu) ---------- */
+.view-compose { max-width: 720px; }
+
+.compose-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.compose-card-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 24px 4px;
+}
+
+.compose-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+.compose-mode-switch { flex-shrink: 0; }
+
+.compose-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.compose-row-label {
+    flex-shrink: 0;
+    width: 56px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
+}
+
+.compose-row-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--ink);
+    padding: 3px 0;
+}
+.compose-row-input:focus { outline: none; }
+
+.compose-subject-input {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.compose-body-input {
+    display: block;
+    width: 100%;
+    min-height: 240px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-ui);
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    padding: 20px 24px;
+    resize: vertical;
+}
+.compose-body-input:focus { outline: none; }
+
+.compose-html-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.editor-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-s);
+    cursor: pointer;
+}
+.editor-btn:hover { background: var(--hairline); color: var(--ink); }
+.editor-btn svg { width: 15px; height: 15px; }
+
+.editor-btn-italic { font-style: italic; }
+.editor-btn-underline { text-decoration: underline; }
+
+.editor-toolbar-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--hairline);
+    margin: 0 6px;
+}
+
+.compose-html-editor {
+    cursor: text;
+}
+.compose-html-editor:empty::before {
+    content: attr(data-placeholder);
+    color: var(--slate);
+}
+/* Grundformatierung für das, was SanitizeHTML serverseitig ohnehin
+   zulässt -- Listen/Zitate sollen im Editor schon so aussehen, wie sie
+   nachher beim Empfänger ankommen. */
+.compose-html-editor ul, .compose-html-editor ol { padding-left: 1.4em; }
+.compose-html-editor blockquote {
+    margin: 0 0 0 4px;
+    padding-left: 12px;
+    border-left: 2px solid var(--hairline);
+    color: var(--ink-soft);
+}
+.compose-html-editor a { color: var(--steel); }
+
+.compose-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 24px 16px;
+}
+.compose-attachments:empty { display: none; }
+
+.attachment-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--steel-soft);
+    color: var(--steel);
+    border-radius: var(--radius-full);
+    padding: 5px 6px 5px 10px;
+    font-size: 12px;
+}
+.attachment-chip svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.attachment-chip-name {
+    font-weight: 600;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attachment-chip-size {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--slate);
+}
+
+.attachment-chip-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.attachment-chip-remove:hover { background: rgba(0, 0, 0, 0.12); }
+.attachment-chip-remove svg { width: 9px; height: 9px; }
+
+.compose-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 24px;
+    background: var(--paper);
+    border-top: 1px solid var(--hairline);
+}
+
+.compose-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ---------- Einstellungen: Allgemein / Erscheinungsbild ---------- */
+.settings-block {
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.settings-row-divider {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+}
+
+.settings-row-title { font-size: 14.5px; font-weight: 700; }
+.settings-row-sub { margin-top: 3px; font-size: 12.5px; color: var(--slate); }
+
+.theme-switch {
+    display: flex;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-full);
+    padding: 3px;
+    flex-shrink: 0;
+}
+
+.theme-btn {
+    font-family: var(--font-ui);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--slate);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.theme-btn.is-active { background: var(--avatar-steel); color: #fff; } /* siehe Kommentar bei .tab.is-active */
+.theme-btn:not(.is-active):hover { background: var(--hairline); }
+
+/* ---------- Einstellungen: Konten-Überschrift mit "+"-Button ---------- */
+.section-label-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 6px;
+}
+.section-label-row .section-label { margin: 0; flex: 1; }
+
+.add-account-btn {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--steel);
+    background: transparent;
+    color: var(--steel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.add-account-btn:hover { background: var(--steel-soft); }
+.add-account-btn svg { width: 14px; height: 14px; }
+
+.empty .primary-btn { margin-top: 16px; }
+
+/* ---------- Konto-Modal (Anlegen/Bearbeiten) ---------- */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 50;
+}
+
+.modal-card {
+    background: var(--paper-raised);
+    border-radius: var(--radius-m);
+    padding: 24px;
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.modal-title { font-size: 19px; font-weight: 700; }
+
+.modal-close-btn {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.modal-close-btn:hover { background: var(--hairline); color: var(--ink); }
+.modal-close-btn svg { width: 14px; height: 14px; }
+
+/* ---------- Bestätigungs-Modal (Löschen etc.) ---------- */
+.modal-card-narrow { max-width: 400px; }
+
+.confirm-modal-message {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+}
+
+.confirm-modal-actions {
+    margin-top: 22px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.primary-btn-danger { background: var(--avatar-rust); }

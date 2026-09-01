@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f:mail</title>
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="wordmark">f:mail</div>
+            <nav class="tabs" id="tabs">
+                <button class="tab is-active" data-view="post">
+                    <span data-i18n="tabs.post">Post</span> <span class="tab-count" id="count-post"></span>
+                </button>
+                <button class="tab" data-view="ablage"><span data-i18n="tabs.ablage">Ablage</span></button>
+                <button class="tab" data-view="gesendet"><span data-i18n="tabs.gesendet">Gesendet</span></button>
+                <button class="tab" data-view="pförtner">
+                    <span data-i18n="tabs.pfoertner">Pförtner</span> <span class="tab-count is-pending" id="count-pförtner"></span>
+                </button>
+                <button class="tab" data-view="einstellungen"><span data-i18n="tabs.einstellungen">Einstellungen</span></button>
+            </nav>
+            <div class="topbar-search">
+                <input type="search" id="search-input" class="search-input" data-i18n-placeholder="search.placeholder" data-i18n-aria-label="search.aria" placeholder="Suchen …" autocomplete="off" aria-label="Post/Ablage/Pförtner durchsuchen" />
+            </div>
+        </header>
+
+        <main class="content" id="content">
+            <!-- wird von main.js befüllt -->
+        </main>
+    </div>
+
+    <div class="gate-toast" id="gate-toast"></div>
+    <div id="modal-root"></div>
+    <div id="confirm-modal-root"></div>
+
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>

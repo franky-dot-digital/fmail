@@ -1,0 +1,23 @@
+# Variante A: X11-Forwarding. Am einfachsten und zuverlässigsten, wenn dein
+# Host Linux mit laufendem X11-Server ist (openSUSE mit X11-Session; unter
+# Wayland läuft es meist trotzdem über XWayland). Fenster erscheint nativ
+# auf deinem Desktop, kein Browser nötig.
+#
+# Vorher einmalig auf dem Host:
+#   xhost +local:docker
+#
+# Start:
+#   DISPLAY=$DISPLAY docker compose up --build
+
+services:
+  fmail:
+    build: .
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - fmail-data:/root/.config/fmail
+    network_mode: host
+
+volumes:
+  fmail-data:
