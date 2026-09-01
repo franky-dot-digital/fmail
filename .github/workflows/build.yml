@@ -28,17 +28,27 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev pkg-config build-essential
-      - name: Prüfen und Frontend bauen
-        working-directory: fmail
+      - name: Frontend installieren, prüfen und bauen
+        working-directory: fmail/frontend
         run: |
-          cd frontend
           npm ci
           npm audit
           npm run build
-          cd ..
+
+      - name: Go-Module und Tests prüfen
+        working-directory: fmail
+        run: |
           go mod verify
           go test -tags gtk3 ./...
+
+      - name: Go-Code statisch prüfen
+        working-directory: fmail
+        run: |
           go vet -tags gtk3 ./...
+
+      - name: Go-Abhängigkeiten auf Schwachstellen prüfen
+        working-directory: fmail
+        run: |
           go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 -tags gtk3 ./...
       - name: Linux-Binary bauen
         working-directory: fmail
