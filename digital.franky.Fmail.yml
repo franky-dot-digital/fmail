@@ -22,8 +22,8 @@ modules:
         - --share=network
     build-commands:
       - |
-        curl -fsSL "https://go.dev/dl/go1.25.11.linux-amd64.tar.gz" -o go.tar.gz
-        echo "34f14304e856893f4ba30c2cacfe93906e9de7915c5f6aaaf3a81cdccd7ba30b  go.tar.gz" | sha256sum -c -
+        curl -fsSL "https://go.dev/dl/go1.25.14.linux-amd64.tar.gz" -o go.tar.gz
+        echo "a21ae5633a269bcd7e90cf767e48225633795e99d831742cbf3397064fee7712  go.tar.gz" | sha256sum -c -
         mkdir -p .goroot
         tar -C .goroot -xzf go.tar.gz --strip-components=1
         rm go.tar.gz
