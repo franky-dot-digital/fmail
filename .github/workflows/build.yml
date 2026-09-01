@@ -31,14 +31,15 @@ jobs:
       - name: Prüfen und Frontend bauen
         working-directory: fmail
         run: |
-          go mod verify
-          go test ./...
-          go vet ./...
-          go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
           cd frontend
           npm ci
           npm audit
           npm run build
+          cd ..
+          go mod verify
+          go test ./...
+          go vet ./...
+          go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
       - name: Linux-Binary bauen
         working-directory: fmail
         run: |
